@@ -1,5 +1,5 @@
 ## Setup
-- `func_make.py` in your Unit 2 Make Folder
+- you know the drill
 
 ## Autograding
 Put `func_make.py` in the repository root. The GitHub Actions workflow runs the
