@@ -1,0 +1,90 @@
+name: Autograding Tests
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  autograding:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install pytest
+        run: python -m pip install pytest
+
+      - name: Test header comments
+        id: header
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Header comments
+          command: python -m pytest -q test_func_make.py::TestHeaderComments
+          timeout: 1
+          max-score: 10
+
+      - name: Test docstrings
+        id: docstrings
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Docstrings
+          command: python -m pytest -q test_func_make.py::TestDocstrings
+          timeout: 1
+          max-score: 20
+
+      - name: Test type annotations
+        id: annotations
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Type annotations
+          command: python -m pytest -q test_func_make.py::TestTypeAnnotations
+          timeout: 1
+          max-score: 15
+
+      - name: Test IPO comments
+        id: ipo
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: IPO comments
+          command: python -m pytest -q test_func_make.py::TestIPOComments
+          timeout: 1
+          max-score: 15
+
+      - name: Test triangle calculation
+        id: triangle
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Triangle calculation
+          command: python -m pytest -q test_func_make.py::test_calc_triangle test_func_make.py::test_calc_triangle_small
+          timeout: 1
+          max-score: 20
+
+      - name: Test slope calculation
+        id: slope
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Slope calculation
+          command: python -m pytest -q test_func_make.py::test_calc_slope_normal test_func_make.py::test_calc_slope_undefined test_func_make.py::test_calc_slope_negative test_func_make.py::test_calc_slope_returns_float_when_defined
+          timeout: 1
+          max-score: 20
+
+      - name: Report autograding results
+        uses: classroom-resources/autograding-grading-reporter@v1
+        env:
+          HEADER_RESULTS: "${{ steps.header.outputs.result }}"
+          DOCSTRINGS_RESULTS: "${{ steps.docstrings.outputs.result }}"
+          ANNOTATIONS_RESULTS: "${{ steps.annotations.outputs.result }}"
+          IPO_RESULTS: "${{ steps.ipo.outputs.result }}"
+          TRIANGLE_RESULTS: "${{ steps.triangle.outputs.result }}"
+          SLOPE_RESULTS: "${{ steps.slope.outputs.result }}"
+        with:
+          runners: header,docstrings,annotations,ipo,triangle,slope

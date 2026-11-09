@@ -3,8 +3,6 @@ import math
 import pytest
 from random import randint
 
-from func_make import calculate_triangle, calculate_slope, main
-
 def _source() -> str:
     with open("func_make.py", encoding="utf-8") as f:
         return f.read()
@@ -224,26 +222,38 @@ class TestIPOComments:
 # ── functionality tests ───────────────────────────────────────────────────────
 
 def test_calc_triangle():
+    from func_make import calculate_triangle
+
     num = randint(5, 100)
     expected = sum(range(1, num + 1))
     assert calculate_triangle(num) == expected
 
 def test_calc_triangle_small():
+    from func_make import calculate_triangle
+
     assert calculate_triangle(6) == 21
 
 def test_calc_slope_normal():
+    from func_make import calculate_slope
+
     assert calculate_slope(1, 2, 1, 2) == 1.0
 
 def test_calc_slope_undefined():
+    from func_make import calculate_slope
+
     result = calculate_slope(3, 3, 1, 5)
     assert result == "undefined", (
         f"calculate_slope should return the string 'undefined' when x1 == x2, got {result!r}"
     )
 
 def test_calc_slope_negative():
+    from func_make import calculate_slope
+
     assert calculate_slope(0, 2, 4, 0) == -2.0
 
 def test_calc_slope_returns_float_when_defined():
+    from func_make import calculate_slope
+
     result = calculate_slope(0, 4, 0, 8)
     assert isinstance(result, float), (
         f"calculate_slope should return a float when slope is defined, got {type(result).__name__}"
